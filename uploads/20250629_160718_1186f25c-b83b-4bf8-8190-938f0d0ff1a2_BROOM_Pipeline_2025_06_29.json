@@ -1,0 +1,70 @@
+{
+  "id": "pipeline-1751212209160",
+  "name": "BROOM_Pipeline_2025-06-29",
+  "version": "1.0.0",
+  "createdAt": "2025-06-29T15:50:09.160Z",
+  "nodes": [
+    {
+      "id": "node-1",
+      "type": "read-file",
+      "position": {
+        "x": 160,
+        "y": 384
+      },
+      "config": {
+        "delimiter": "adf",
+        "encoding": "utf-8",
+        "fileName": "dig_whiteboard_transfer.json",
+        "fileSize": 3335,
+        "fileType": "application/json",
+        "file": {},
+        "fileId": "76962fb7-5247-4ac3-b526-7644abd830eb",
+        "uploadStatus": "success"
+      },
+      "inputs": [],
+      "outputs": [
+        {
+          "id": "node-1-output-0",
+          "name": "Raw Data",
+          "dataType": "DataFrame"
+        }
+      ]
+    },
+    {
+      "id": "node-2",
+      "type": "column-selector",
+      "position": {
+        "x": 799,
+        "y": 301
+      },
+      "config": {
+        "columnName": "adf"
+      },
+      "inputs": [
+        {
+          "id": "node-2-input-0",
+          "name": "Raw Data",
+          "dataType": "DataFrame"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-2-output-0",
+          "name": "Series",
+          "dataType": "Series"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "connection-0",
+      "fromNodeId": "node-1",
+      "fromPortId": "node-1-output-0",
+      "toNodeId": "node-2",
+      "toPortId": "node-2-input-0",
+      "dataType": "DataFrame"
+    }
+  ],
+  "description": ""
+}

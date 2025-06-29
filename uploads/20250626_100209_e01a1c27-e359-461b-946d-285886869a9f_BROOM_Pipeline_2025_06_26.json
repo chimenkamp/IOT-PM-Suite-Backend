@@ -1,0 +1,549 @@
+{
+  "id": "pipeline-1750924411187",
+  "name": "BROOM_Pipeline_2025-06-26",
+  "version": "1.0.0",
+  "createdAt": "2025-06-26T07:53:31.187Z",
+  "nodes": [
+    {
+      "id": "node-1",
+      "type": "read-file",
+      "position": {
+        "x": 176,
+        "y": 141
+      },
+      "config": {
+        "fileType": "YAML"
+      },
+      "inputs": [],
+      "outputs": [
+        {
+          "id": "node-1-raw-data",
+          "name": "Raw Data",
+          "dataType": "DataFrame"
+        }
+      ]
+    },
+    {
+      "id": "node-2",
+      "type": "column-selector",
+      "position": {
+        "x": 620,
+        "y": 221
+      },
+      "config": {
+        "columnName": "case:concept:name"
+      },
+      "inputs": [
+        {
+          "id": "node-2-raw-data",
+          "name": "Raw Data",
+          "dataType": "DataFrame"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-2-series",
+          "name": "Series",
+          "dataType": "Series"
+        }
+      ]
+    },
+    {
+      "id": "node-3",
+      "type": "column-selector",
+      "position": {
+        "x": 695,
+        "y": 548
+      },
+      "config": {
+        "columnName": "case:concept:name"
+      },
+      "inputs": [
+        {
+          "id": "node-3-raw-data",
+          "name": "Raw Data",
+          "dataType": "DataFrame"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-3-series",
+          "name": "Series",
+          "dataType": "Series"
+        }
+      ]
+    },
+    {
+      "id": "node-4",
+      "type": "column-selector",
+      "position": {
+        "x": 630,
+        "y": 642
+      },
+      "config": {
+        "columnName": "case:concept:name"
+      },
+      "inputs": [
+        {
+          "id": "node-4-raw-data",
+          "name": "Raw Data",
+          "dataType": "DataFrame"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-4-series",
+          "name": "Series",
+          "dataType": "Series"
+        }
+      ]
+    },
+    {
+      "id": "node-6",
+      "type": "attribute-selector",
+      "position": {
+        "x": 667,
+        "y": 436
+      },
+      "config": {
+        "attributeKey": "value",
+        "defaultValue": "\"\"",
+        "testStatus": "success",
+        "lastTested": "2025-06-26T07:43:46.907Z"
+      },
+      "inputs": [
+        {
+          "id": "node-6-series",
+          "name": "Series",
+          "dataType": "Series"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-6-attribute",
+          "name": "Attribute",
+          "dataType": "Attribute"
+        }
+      ]
+    },
+    {
+      "id": "node-7",
+      "type": "attribute-selector",
+      "position": {
+        "x": 577,
+        "y": 647
+      },
+      "config": {
+        "attributeKey": "value",
+        "defaultValue": "2"
+      },
+      "inputs": [
+        {
+          "id": "node-7-series",
+          "name": "Series",
+          "dataType": "Series"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-7-attribute",
+          "name": "Attribute",
+          "dataType": "Attribute"
+        }
+      ]
+    },
+    {
+      "id": "node-8",
+      "type": "data-filter",
+      "position": {
+        "x": 825,
+        "y": 194
+      },
+      "config": {
+        "condition": "text",
+        "operator": "contains"
+      },
+      "inputs": [
+        {
+          "id": "node-8-series",
+          "name": "Series",
+          "dataType": "Series"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-8-series",
+          "name": "Series",
+          "dataType": "Series"
+        }
+      ]
+    },
+    {
+      "id": "node-10",
+      "type": "attribute-selector",
+      "position": {
+        "x": 917,
+        "y": 219
+      },
+      "config": {
+        "attributeKey": "rfr",
+        "defaultValue": "rfrf"
+      },
+      "inputs": [
+        {
+          "id": "node-10-series",
+          "name": "Series",
+          "dataType": "Series"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-10-attribute",
+          "name": "Attribute",
+          "dataType": "Attribute"
+        }
+      ]
+    },
+    {
+      "id": "node-12",
+      "type": "core-metamodel",
+      "position": {
+        "x": 790,
+        "y": 378
+      },
+      "config": {},
+      "inputs": [
+        {
+          "id": "node-12-process-events",
+          "name": "Process Events",
+          "dataType": "Event"
+        },
+        {
+          "id": "node-12-iot-events",
+          "name": "IoT Events",
+          "dataType": "Event"
+        },
+        {
+          "id": "node-12-relationships",
+          "name": "Relationships",
+          "dataType": "Relationship"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-12-core-metamodel",
+          "name": "CORE Metamodel",
+          "dataType": "COREModel"
+        }
+      ]
+    },
+    {
+      "id": "node-13",
+      "type": "event-object-relation",
+      "position": {
+        "x": 469,
+        "y": 351
+      },
+      "config": {
+        "relationshipType": "involves"
+      },
+      "inputs": [
+        {
+          "id": "node-13-event",
+          "name": "Event",
+          "dataType": "Event"
+        },
+        {
+          "id": "node-13-object",
+          "name": "Object",
+          "dataType": "Object"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-13-e-o-relationship",
+          "name": "E-O Relationship",
+          "dataType": "Relationship"
+        }
+      ]
+    },
+    {
+      "id": "node-14",
+      "type": "object-class-selector",
+      "position": {
+        "x": 370,
+        "y": 251
+      },
+      "config": {
+        "objectClass": "PROCESS"
+      },
+      "inputs": [],
+      "outputs": [
+        {
+          "id": "node-14-class",
+          "name": "Class",
+          "dataType": "Attribute"
+        }
+      ]
+    },
+    {
+      "id": "node-15",
+      "type": "object-creator",
+      "position": {
+        "x": 395,
+        "y": 419
+      },
+      "config": {},
+      "inputs": [
+        {
+          "id": "node-15-id",
+          "name": "ID",
+          "dataType": "Attribute"
+        },
+        {
+          "id": "node-15-type",
+          "name": "Type",
+          "dataType": "Attribute"
+        },
+        {
+          "id": "node-15-class",
+          "name": "Class",
+          "dataType": "Attribute"
+        },
+        {
+          "id": "node-15-metadata",
+          "name": "Metadata",
+          "dataType": "Attribute"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-15-object",
+          "name": "Object",
+          "dataType": "Object"
+        }
+      ]
+    },
+    {
+      "id": "node-16",
+      "type": "process-event",
+      "position": {
+        "x": 557,
+        "y": 130
+      },
+      "config": {},
+      "inputs": [
+        {
+          "id": "node-16-id",
+          "name": "ID",
+          "dataType": "Attribute"
+        },
+        {
+          "id": "node-16-type",
+          "name": "Type",
+          "dataType": "Attribute"
+        },
+        {
+          "id": "node-16-timestamp",
+          "name": "Timestamp",
+          "dataType": "Attribute"
+        },
+        {
+          "id": "node-16-metadata",
+          "name": "Metadata",
+          "dataType": "Attribute"
+        },
+        {
+          "id": "node-16-activity-label",
+          "name": "Activity Label",
+          "dataType": "Attribute"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-16-process-event",
+          "name": "Process Event",
+          "dataType": "Event"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "connection-0",
+      "fromNodeId": "node-1",
+      "fromPortId": "node-1-raw-data",
+      "toNodeId": "node-2",
+      "toPortId": "node-2-raw-data",
+      "dataType": "DataFrame"
+    },
+    {
+      "id": "connection-1",
+      "fromNodeId": "node-1",
+      "fromPortId": "node-1-raw-data",
+      "toNodeId": "node-3",
+      "toPortId": "node-3-raw-data",
+      "dataType": "DataFrame"
+    },
+    {
+      "id": "connection-2",
+      "fromNodeId": "node-1",
+      "fromPortId": "node-1-raw-data",
+      "toNodeId": "node-4",
+      "toPortId": "node-4-raw-data",
+      "dataType": "DataFrame"
+    },
+    {
+      "id": "connection-3",
+      "fromNodeId": "node-3",
+      "fromPortId": "node-3-series",
+      "toNodeId": "node-6",
+      "toPortId": "node-6-series",
+      "dataType": "Series"
+    },
+    {
+      "id": "connection-4",
+      "fromNodeId": "node-4",
+      "fromPortId": "node-4-series",
+      "toNodeId": "node-7",
+      "toPortId": "node-7-series",
+      "dataType": "Series"
+    },
+    {
+      "id": "connection-5",
+      "fromNodeId": "node-2",
+      "fromPortId": "node-2-series",
+      "toNodeId": "node-8",
+      "toPortId": "node-8-series",
+      "dataType": "Series"
+    },
+    {
+      "id": "connection-6",
+      "fromNodeId": "node-8",
+      "fromPortId": "node-8-series",
+      "toNodeId": "node-10",
+      "toPortId": "node-10-series",
+      "dataType": "Series"
+    },
+    {
+      "id": "connection-7",
+      "fromNodeId": "node-13",
+      "fromPortId": "node-13-e-o-relationship",
+      "toNodeId": "node-12",
+      "toPortId": "node-12-relationships",
+      "dataType": "Relationship"
+    },
+    {
+      "id": "connection-8",
+      "fromNodeId": "node-14",
+      "fromPortId": "node-14-class",
+      "toNodeId": "node-15",
+      "toPortId": "node-15-class",
+      "dataType": "Attribute"
+    },
+    {
+      "id": "connection-9",
+      "fromNodeId": "node-7",
+      "fromPortId": "node-7-attribute",
+      "toNodeId": "node-15",
+      "toPortId": "node-15-id",
+      "dataType": "Attribute"
+    },
+    {
+      "id": "connection-10",
+      "fromNodeId": "node-6",
+      "fromPortId": "node-6-attribute",
+      "toNodeId": "node-15",
+      "toPortId": "node-15-type",
+      "dataType": "Attribute"
+    },
+    {
+      "id": "connection-11",
+      "fromNodeId": "node-16",
+      "fromPortId": "node-16-process-event",
+      "toNodeId": "node-12",
+      "toPortId": "node-12-process-events",
+      "dataType": "Event"
+    },
+    {
+      "id": "connection-12",
+      "fromNodeId": "node-15",
+      "fromPortId": "node-15-object",
+      "toNodeId": "node-13",
+      "toPortId": "node-13-object",
+      "dataType": "Object"
+    },
+    {
+      "id": "connection-13",
+      "fromNodeId": "node-10",
+      "fromPortId": "node-10-attribute",
+      "toNodeId": "node-16",
+      "toPortId": "node-16-id",
+      "dataType": "Attribute"
+    },
+    {
+      "id": "connection-14",
+      "fromNodeId": "node-6",
+      "fromPortId": "node-6-attribute",
+      "toNodeId": "node-16",
+      "toPortId": "node-16-type",
+      "dataType": "Attribute"
+    },
+    {
+      "id": "connection-15",
+      "fromNodeId": "node-16",
+      "fromPortId": "node-16-process-event",
+      "toNodeId": "node-13",
+      "toPortId": "node-13-event",
+      "dataType": "Event"
+    },
+    {
+      "id": "connection-16",
+      "fromNodeId": "node-14",
+      "fromPortId": "node-14-class",
+      "toNodeId": "node-15",
+      "toPortId": "node-15-metadata",
+      "dataType": "Attribute"
+    },
+    {
+      "id": "connection-17",
+      "fromNodeId": "node-6",
+      "fromPortId": "node-6-attribute",
+      "toNodeId": "node-16",
+      "toPortId": "node-16-timestamp",
+      "dataType": "Attribute"
+    },
+    {
+      "id": "connection-18",
+      "fromNodeId": "node-7",
+      "fromPortId": "node-7-attribute",
+      "toNodeId": "node-16",
+      "toPortId": "node-16-metadata",
+      "dataType": "Attribute"
+    },
+    {
+      "id": "connection-19",
+      "fromNodeId": "node-7",
+      "fromPortId": "node-7-attribute",
+      "toNodeId": "node-16",
+      "toPortId": "node-16-activity-label",
+      "dataType": "Attribute"
+    }
+  ],
+  "executionOrder": [
+    "node-1",
+    "node-2",
+    "node-3",
+    "node-4",
+    "node-6",
+    "node-7",
+    "node-8",
+    "node-10",
+    "node-14",
+    "node-15",
+    "node-16",
+    "node-13",
+    "node-12"
+  ],
+  "description": ""
+}
