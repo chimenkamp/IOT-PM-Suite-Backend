@@ -1,4 +1,4 @@
-# models/pipeline_models.py - Pydantic Data Models for Pipeline
+# models/pipeline_models.py
 
 from pydantic import BaseModel, Field, validator
 from typing import List, Dict, Any, Optional, Union
@@ -27,16 +27,39 @@ class PipelineNode(BaseModel):
         valid_types = {
             # Data Input & Loading
             'read-file', 'mqtt-connector',
+
+            # CAIRO XML Parsing Nodes
+            'xml-trace-extractor', 'case-object-extractor', 'stream-point-extractor',
+            'iot-event-from-stream', 'trace-event-linker',
+
+            # Generic XML Processing Nodes
+            'xml-element-selector', 'xml-attribute-extractor', 'nested-list-processor',
+
+            # Stream Processing Nodes
+            'lifecycle-calculator', 'stream-aggregator', 'stream-event-creator',
+            'stream-metadata-extractor',
+
+            # Enhanced Object Creation
+            'dynamic-object-creator', 'attribute-mapper',
+
+            # Enhanced Relationships
+            'context-based-linker',
+
             # Data Processing
             'column-selector', 'attribute-selector', 'data-filter', 'data-mapper',
+
             # CORE Model Creation
             'iot-event', 'process-event', 'object-creator',
+
             # Utilities
             'unique-id-generator', 'object-class-selector',
+
             # Relationships
             'event-object-relation', 'event-event-relation',
+
             # CORE Model Construction
             'core-metamodel',
+
             # Output & Export
             'table-output', 'export-ocel', 'ocpm-discovery'
         }
@@ -64,6 +87,7 @@ class PipelineMetadata(BaseModel):
     modifiedAt: Optional[str] = None
     author: Optional[str] = None
     tags: List[str] = Field(default_factory=list)
+    parsing_format: Optional[str] = None  # Added for CAIRO format indication
 
 
 class PipelineDefinition(BaseModel):
@@ -123,12 +147,82 @@ class FileUploadRequest(BaseModel):
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
 
+# ============ CAIRO-SPECIFIC DATA MODELS ============
+
+class CAIROTraceData(BaseModel):
+    """Data model for CAIRO trace information."""
+    concept_name: str
+    trace_data: Dict[str, Any]
+    stream_points: List[Dict[str, Any]] = Field(default_factory=list)
+    lifecycle_start: Optional[datetime] = None
+    lifecycle_end: Optional[datetime] = None
+
+
+class StreamPointData(BaseModel):
+    """Data model for stream measurement points."""
+    trace_concept_name: str
+    timestamp: datetime
+    stream_id: Optional[str] = None
+    stream_source: Optional[str] = None
+    stream_value: Optional[str] = None
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+    raw_data: Dict[str, Any] = Field(default_factory=dict)
+
+
+class XMLElementData(BaseModel):
+    """Data model for XML elements."""
+    tag_name: str
+    text_content: Optional[str] = None
+    attributes: Dict[str, Any] = Field(default_factory=dict)
+    children: List['XMLElementData'] = Field(default_factory=list)
+    xpath: Optional[str] = None
+
+
+class StreamMetadata(BaseModel):
+    """Data model for stream metadata."""
+    stream_id: str
+    stream_source: str
+    stream_type: Optional[str] = None
+    measurement_unit: Optional[str] = None
+    sensor_location: Optional[str] = None
+    additional_metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class LifecycleData(BaseModel):
+    """Data model for lifecycle information."""
+    start_time: datetime
+    end_time: datetime
+    duration_seconds: float
+    total_events: int = 0
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+# ============ ENHANCED VALIDATION MODELS ============
+
 class DataSourceConfig(BaseModel):
     """Configuration for data source nodes."""
     source_type: str  # 'file', 'mqtt', 'database', etc.
     connection_params: Dict[str, Any]
     data_format: Optional[str] = None
     schema_info: Optional[Dict[str, Any]] = None
+    parsing_format: Optional[str] = None  # 'cairo', 'xes', 'csv', etc.
+
+
+class XMLParsingConfig(BaseModel):
+    """Configuration for XML parsing operations."""
+    xpath_expressions: Dict[str, str] = Field(default_factory=dict)
+    attribute_mappings: Dict[str, str] = Field(default_factory=dict)
+    namespace_prefixes: Dict[str, str] = Field(default_factory=dict)
+    output_format: str = "structured"
+    preserve_hierarchy: bool = True
+
+
+class StreamProcessingConfig(BaseModel):
+    """Configuration for stream processing operations."""
+    aggregation_window: Optional[int] = None  # seconds
+    aggregation_functions: List[str] = Field(default_factory=list)
+    filtering_conditions: Dict[str, Any] = Field(default_factory=dict)
+    metadata_extraction_rules: List[Dict[str, str]] = Field(default_factory=list)
 
 
 class ProcessingConfig(BaseModel):
@@ -136,6 +230,8 @@ class ProcessingConfig(BaseModel):
     operation: str
     parameters: Dict[str, Any]
     validation_rules: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
+    xml_config: Optional[XMLParsingConfig] = None
+    stream_config: Optional[StreamProcessingConfig] = None
 
 
 class COREModelConfig(BaseModel):
@@ -144,6 +240,7 @@ class COREModelConfig(BaseModel):
     object_types: List[str] = Field(default_factory=list)
     relationship_types: List[str] = Field(default_factory=list)
     metadata_mapping: Dict[str, str] = Field(default_factory=dict)
+    cairo_specific: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
 
 class ExportConfig(BaseModel):
@@ -162,6 +259,56 @@ class ValidationRule(BaseModel):
     condition: str
     message: str
     severity: str = "error"  # error, warning, info
+    node_types: List[str] = Field(default_factory=list)  # Applicable node types
+
+
+# ============ CAIRO-SPECIFIC TEMPLATES ============
+
+class CAIROPipelineTemplate(BaseModel):
+    """Template specifically for CAIRO XML processing pipelines."""
+    name: str = "CAIRO XML Processing Pipeline"
+    description: str = "Template for processing CAIRO XML sensor stream logs"
+    category: str = "CAIRO"
+    template_version: str = "1.0.0"
+
+    # Standard CAIRO processing flow
+    node_sequence: List[str] = Field(default_factory=lambda: [
+        'read-file',
+        'xml-trace-extractor',
+        'case-object-extractor',
+        'stream-point-extractor',
+        'iot-event-from-stream',
+        'trace-event-linker',
+        'core-metamodel',
+        'export-ocel'
+    ])
+
+    default_config: Dict[str, Dict[str, Any]] = Field(default_factory=lambda: {
+        'xml-trace-extractor': {
+            'traceXPath': 'log/trace',
+            'traceIdentifier': 'concept:name'
+        },
+        'case-object-extractor': {
+            'caseIdAttribute': 'concept:name',
+            'objectType': 'case_object',
+            'extractLifecycle': True
+        },
+        'stream-point-extractor': {
+            'streamPointsPath': 'list/list/list',
+            'timestampField': 'date',
+            'eventDataPath': 'string'
+        },
+        'iot-event-from-stream': {
+            'streamIdField': 'stream:id',
+            'streamSourceField': 'stream:source',
+            'streamValueField': 'stream:value',
+            'eventClass': 'iot_event'
+        },
+        'trace-event-linker': {
+            'linkingAttribute': 'concept:name',
+            'relationshipType': 'belongs_to'
+        }
+    })
 
 
 class PipelineTemplate(BaseModel):
@@ -174,6 +321,7 @@ class PipelineTemplate(BaseModel):
     connection_templates: List[Dict[str, Any]]
     default_config: Dict[str, Any] = Field(default_factory=dict)
     required_inputs: List[str] = Field(default_factory=list)
+    cairo_template: Optional[CAIROPipelineTemplate] = None
 
 
 class PipelineValidationConfig(BaseModel):
@@ -183,6 +331,7 @@ class PipelineValidationConfig(BaseModel):
     require_input_nodes: bool = True
     require_output_nodes: bool = False
     custom_rules: List[ValidationRule] = Field(default_factory=list)
+    cairo_validation: bool = False  # Enable CAIRO-specific validation
 
 
 class ExecutionEnvironment(BaseModel):
@@ -192,6 +341,197 @@ class ExecutionEnvironment(BaseModel):
     timeout_seconds: Optional[int] = None
     retry_config: Dict[str, Any] = Field(default_factory=dict)
     logging_config: Dict[str, Any] = Field(default_factory=dict)
+    xml_parsing_config: Optional[XMLParsingConfig] = None
+
+
+# ============ DATA TYPE DEFINITIONS ============
+
+class DataTypeEnum(str, Enum):
+    """Enumeration of supported data types."""
+    # Core data types
+    DATAFRAME = "DataFrame"
+    SERIES = "Series"
+    ATTRIBUTE = "Attribute"
+    EVENT = "Event"
+    OBJECT = "Object"
+    RELATIONSHIP = "Relationship"
+    CORE_MODEL = "COREModel"
+
+    # CAIRO-specific data types
+    TRACES = "Traces"
+    STREAM_POINTS = "StreamPoints"
+    STREAM_EVENTS = "StreamEvents"
+    STREAM_METADATA = "StreamMetadata"
+    LIFECYCLE_DATA = "LifecycleData"
+    XML_ELEMENTS = "Elements"
+    FLATTENED_DATA = "FlattenedData"
+    CONTEXT_RELATIONSHIPS = "ContextRelationships"
+    MAPPED_ATTRIBUTES = "MappedAttributes"
+
+
+class NodeCategoryEnum(str, Enum):
+    """Enumeration of node categories."""
+    DATA_INPUT = "Data Input & Loading"
+    CAIRO_XML_PARSING = "CAIRO XML Parsing"
+    XML_PROCESSING = "Generic XML Processing"
+    STREAM_PROCESSING = "Stream Processing"
+    DATA_PROCESSING = "Data Processing"
+    CORE_MODEL_CREATION = "CORE Model Creation"
+    UTILITIES = "Utilities"
+    RELATIONSHIPS = "Relationships"
+    CORE_MODEL_CONSTRUCTION = "CORE Model Construction"
+    OUTPUT_EXPORT = "Output & Export"
+
+
+class CAIRONodeTypeEnum(str, Enum):
+    """Enumeration of CAIRO-specific node types."""
+    XML_TRACE_EXTRACTOR = "xml-trace-extractor"
+    CASE_OBJECT_EXTRACTOR = "case-object-extractor"
+    STREAM_POINT_EXTRACTOR = "stream-point-extractor"
+    IOT_EVENT_FROM_STREAM = "iot-event-from-stream"
+    TRACE_EVENT_LINKER = "trace-event-linker"
+    XML_ELEMENT_SELECTOR = "xml-element-selector"
+    XML_ATTRIBUTE_EXTRACTOR = "xml-attribute-extractor"
+    NESTED_LIST_PROCESSOR = "nested-list-processor"
+    LIFECYCLE_CALCULATOR = "lifecycle-calculator"
+    STREAM_AGGREGATOR = "stream-aggregator"
+    STREAM_EVENT_CREATOR = "stream-event-creator"
+    STREAM_METADATA_EXTRACTOR = "stream-metadata-extractor"
+    DYNAMIC_OBJECT_CREATOR = "dynamic-object-creator"
+    ATTRIBUTE_MAPPER = "attribute-mapper"
+    CONTEXT_BASED_LINKER = "context-based-linker"
+
+
+# ============ CONFIGURATION VALIDATION ============
+
+class NodeConfigurationSchema(BaseModel):
+    """Schema for validating node configurations."""
+    node_type: str
+    required_fields: List[str] = Field(default_factory=list)
+    optional_fields: List[str] = Field(default_factory=list)
+    field_types: Dict[str, str] = Field(default_factory=dict)
+    field_options: Dict[str, List[str]] = Field(default_factory=dict)
+    validation_rules: List[Dict[str, Any]] = Field(default_factory=dict)
+
+
+# CAIRO-specific configuration schemas
+CAIRO_NODE_SCHEMAS = {
+    'xml-trace-extractor': NodeConfigurationSchema(
+        node_type='xml-trace-extractor',
+        required_fields=['traceXPath', 'traceIdentifier'],
+        optional_fields=['namespacePrefix'],
+        field_types={
+            'traceXPath': 'string',
+            'traceIdentifier': 'string',
+            'namespacePrefix': 'string'
+        }
+    ),
+    'case-object-extractor': NodeConfigurationSchema(
+        node_type='case-object-extractor',
+        required_fields=['caseIdAttribute', 'objectType'],
+        optional_fields=['extractLifecycle'],
+        field_types={
+            'caseIdAttribute': 'string',
+            'objectType': 'string',
+            'extractLifecycle': 'boolean'
+        }
+    ),
+    'stream-point-extractor': NodeConfigurationSchema(
+        node_type='stream-point-extractor',
+        required_fields=['streamPointsPath', 'timestampField', 'eventDataPath'],
+        optional_fields=['filterEmpty'],
+        field_types={
+            'streamPointsPath': 'string',
+            'timestampField': 'string',
+            'eventDataPath': 'string',
+            'filterEmpty': 'boolean'
+        }
+    ),
+    'iot-event-from-stream': NodeConfigurationSchema(
+        node_type='iot-event-from-stream',
+        required_fields=['streamIdField', 'eventClass'],
+        optional_fields=['streamSourceField', 'streamValueField', 'eventIdPattern'],
+        field_types={
+            'streamIdField': 'string',
+            'streamSourceField': 'string',
+            'streamValueField': 'string',
+            'eventClass': 'string',
+            'eventIdPattern': 'string'
+        },
+        field_options={
+            'eventClass': ['iot_event', 'sensor_event', 'measurement_event', 'observation_event']
+        }
+    ),
+    'trace-event-linker': NodeConfigurationSchema(
+        node_type='trace-event-linker',
+        required_fields=['linkingAttribute', 'relationshipType'],
+        optional_fields=['matchingStrategy'],
+        field_types={
+            'linkingAttribute': 'string',
+            'relationshipType': 'string',
+            'matchingStrategy': 'string'
+        },
+        field_options={
+            'relationshipType': ['belongs_to', 'monitors', 'observes', 'measures', 'tracks'],
+            'matchingStrategy': ['exact_match', 'contains', 'starts_with', 'regex']
+        }
+    ),
+    'xml-element-selector': NodeConfigurationSchema(
+        node_type='xml-element-selector',
+        required_fields=['xpath', 'outputFormat'],
+        optional_fields=['namespacePrefix'],
+        field_types={
+            'xpath': 'string',
+            'outputFormat': 'string',
+            'namespacePrefix': 'string'
+        },
+        field_options={
+            'outputFormat': ['Element List', 'Text Values', 'Attribute Values']
+        }
+    ),
+    'stream-aggregator': NodeConfigurationSchema(
+        node_type='stream-aggregator',
+        required_fields=['aggregationField', 'aggregationFunction'],
+        optional_fields=['groupByField', 'timeWindow'],
+        field_types={
+            'aggregationField': 'string',
+            'aggregationFunction': 'string',
+            'groupByField': 'string',
+            'timeWindow': 'number'
+        },
+        field_options={
+            'aggregationFunction': ['mean', 'sum', 'count', 'min', 'max', 'std']
+        }
+    ),
+    'attribute-mapper': NodeConfigurationSchema(
+        node_type='attribute-mapper',
+        required_fields=['sourceField', 'targetAttribute'],
+        optional_fields=['transformation', 'prefix'],
+        field_types={
+            'sourceField': 'string',
+            'targetAttribute': 'string',
+            'transformation': 'string',
+            'prefix': 'string'
+        },
+        field_options={
+            'transformation': ['none', 'to_string', 'to_number', 'to_date', 'extract_uuid']
+        }
+    ),
+    'context-based-linker': NodeConfigurationSchema(
+        node_type='context-based-linker',
+        required_fields=['contextAttribute', 'relationshipType'],
+        optional_fields=['matchingStrategy'],
+        field_types={
+            'contextAttribute': 'string',
+            'relationshipType': 'string',
+            'matchingStrategy': 'string'
+        },
+        field_options={
+            'relationshipType': ['belongs_to', 'monitors', 'observes', 'measures', 'tracks'],
+            'matchingStrategy': ['exact_match', 'contains', 'starts_with', 'regex']
+        }
+    )
+}
 
 
 class PipelineSchedule(BaseModel):
@@ -222,6 +562,7 @@ class UserPreferences(BaseModel):
     grid_size: int = 20
     snap_to_grid: bool = True
     default_node_colors: Dict[str, str] = Field(default_factory=dict)
+    cairo_preferences: Dict[str, Any] = Field(default_factory=dict)
 
 
 class ProjectConfig(BaseModel):
@@ -234,9 +575,10 @@ class ProjectConfig(BaseModel):
     settings: Dict[str, Any] = Field(default_factory=dict)
     created_at: datetime
     updated_at: datetime
+    supported_formats: List[str] = Field(default_factory=lambda: ['CSV', 'XML', 'JSON', 'CAIRO'])
 
 
-# Additional utility classes
+# ============ ADDITIONAL UTILITY CLASSES ============
 
 class NodeCategory(BaseModel):
     """Category for organizing nodes."""
@@ -246,6 +588,7 @@ class NodeCategory(BaseModel):
     icon: Optional[str] = None
     color: Optional[str] = None
     order: int = 0
+    node_types: List[str] = Field(default_factory=list)
 
 
 class DataType(BaseModel):
@@ -255,6 +598,7 @@ class DataType(BaseModel):
     description: Optional[str] = None
     color: str
     validation_schema: Optional[Dict[str, Any]] = None
+    compatible_types: List[str] = Field(default_factory=list)
 
 
 class PortDefinition(BaseModel):
@@ -279,3 +623,41 @@ class NodeTypeDefinition(BaseModel):
     outputs: List[PortDefinition] = Field(default_factory=list)
     config_schema: Dict[str, Any] = Field(default_factory=dict)
     documentation_url: Optional[str] = None
+    is_cairo_specific: bool = False
+
+
+# ============ VALIDATION FUNCTIONS ============
+
+def validate_cairo_pipeline(pipeline: PipelineDefinition) -> List[str]:
+    """Validate CAIRO-specific pipeline requirements."""
+    errors = []
+
+    # Check for required CAIRO node sequence
+    cairo_nodes = [node for node in pipeline.nodes if node.type in CAIRONodeTypeEnum.__members__.values()]
+
+    if cairo_nodes:
+        # If CAIRO nodes are present, validate the typical flow
+        has_xml_input = any(node.type == 'read-file' and
+                            node.config.get('fileType', '').upper() == 'XML'
+                            for node in pipeline.nodes)
+
+        if not has_xml_input:
+            errors.append("CAIRO pipeline should start with XML file input")
+
+        has_trace_extractor = any(node.type == 'xml-trace-extractor' for node in pipeline.nodes)
+        if not has_trace_extractor:
+            errors.append("CAIRO pipeline should include XML trace extractor")
+
+        has_case_objects = any(node.type == 'case-object-extractor' for node in pipeline.nodes)
+        has_stream_events = any(
+            node.type in ['iot-event-from-stream', 'stream-event-creator'] for node in pipeline.nodes)
+
+        if not (has_case_objects or has_stream_events):
+            errors.append("CAIRO pipeline should create either case objects or stream events")
+
+    return errors
+
+
+def get_node_configuration_schema(node_type: str) -> Optional[NodeConfigurationSchema]:
+    """Get configuration schema for a specific node type."""
+    return CAIRO_NODE_SCHEMAS.get(node_type)

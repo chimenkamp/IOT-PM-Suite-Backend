@@ -1,0 +1,866 @@
+{
+  "id": "pipeline-1756188745966",
+  "name": "BROOM_Pipeline_2025-08-26",
+  "version": "1.0.0",
+  "createdAt": "2025-08-26T06:12:25.966Z",
+  "nodes": [
+    {
+      "id": "node-1",
+      "type": "read-file",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "config": {
+        "config": {
+          "config": {
+            "config": {
+              "config": {
+                "config": {
+                  "config": {
+                    "config": {
+                      "config": {
+                        "config": {
+                          "config": {
+                            "fileType": "XML"
+                          },
+                          "fileType": "XES"
+                        },
+                        "encoding": "UTF-8"
+                      },
+                      "fileType": "XML"
+                    },
+                    "fileName": "full_log.xml"
+                  },
+                  "fileSize": 494446
+                },
+                "fileType": "text/xml"
+              },
+              "file": {}
+            },
+            "fileId": "f71a2f70-d9a4-4435-99e8-2ad888b4f7a3"
+          },
+          "uploadStatus": "success"
+        }
+      },
+      "inputs": [],
+      "outputs": [
+        {
+          "id": "node-1-output-0",
+          "name": "Raw Data",
+          "dataType": "DataFrame"
+        }
+      ]
+    },
+    {
+      "id": "node-2",
+      "type": "xml-trace-extractor",
+      "position": {
+        "x": 400,
+        "y": 100
+      },
+      "config": {
+        "config": {
+          "config": {
+            "config": {
+              "config": {
+                "config": {
+                  "config": {
+                    "config": {
+                      "config": {
+                        "config": {
+                          "config": {
+                            "config": {
+                              "config": {
+                                "config": {
+                                  "config": {
+                                    "config": {
+                                      "config": {
+                                        "config": {
+                                          "config": {
+                                            "config": {
+                                              "config": {
+                                                "config": {
+                                                  "config": {
+                                                    "config": {
+                                                      "config": {
+                                                        "config": {
+                                                          "config": {
+                                                            "config": {
+                                                              "config": {
+                                                                "config": {
+                                                                  "config": {
+                                                                    "config": {
+                                                                      "config": {
+                                                                        "traceXPath": "log/trace",
+                                                                        "traceIdentifier": "concept:name"
+                                                                      },
+                                                                      "traceXPath": "l"
+                                                                    },
+                                                                    "traceXPath": "lo"
+                                                                  },
+                                                                  "traceXPath": "log"
+                                                                },
+                                                                "traceXPath": "log_"
+                                                              },
+                                                              "traceXPath": "log_t"
+                                                            },
+                                                            "traceXPath": "log_tr"
+                                                          },
+                                                          "traceXPath": "log_tra"
+                                                        },
+                                                        "traceXPath": "log_trac"
+                                                      },
+                                                      "traceXPath": "log_trace"
+                                                    },
+                                                    "traceIdentifier": "c"
+                                                  },
+                                                  "traceIdentifier": "ca"
+                                                },
+                                                "traceIdentifier": "cas"
+                                              },
+                                              "traceIdentifier": "ca"
+                                            },
+                                            "traceIdentifier": "cac"
+                                          },
+                                          "traceIdentifier": "cace"
+                                        },
+                                        "traceIdentifier": "cac"
+                                      },
+                                      "traceIdentifier": "ca"
+                                    },
+                                    "traceIdentifier": "c"
+                                  },
+                                  "traceIdentifier": ""
+                                },
+                                "traceIdentifier": "c"
+                              },
+                              "traceIdentifier": "co"
+                            },
+                            "traceIdentifier": "con"
+                          },
+                          "traceIdentifier": "conc"
+                        },
+                        "traceIdentifier": "conce"
+                      },
+                      "traceIdentifier": "concep"
+                    },
+                    "traceIdentifier": "concept"
+                  },
+                  "traceIdentifier": "concept:"
+                },
+                "traceIdentifier": "concept:n"
+              },
+              "traceIdentifier": "concept:na"
+            },
+            "traceIdentifier": "concept:nam"
+          },
+          "traceIdentifier": "concept:name"
+        }
+      },
+      "inputs": [
+        {
+          "id": "node-2-input-0",
+          "name": "XML Data",
+          "dataType": "DataFrame"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-2-output-0",
+          "name": "Traces",
+          "dataType": "Series"
+        }
+      ]
+    },
+    {
+      "id": "node-3",
+      "type": "case-object-extractor",
+      "position": {
+        "x": 100,
+        "y": 300
+      },
+      "config": {
+        "config": {
+          "config": {
+            "config": {
+              "config": {
+                "config": {
+                  "config": {
+                    "config": {
+                      "config": {
+                        "config": {
+                          "config": {
+                            "config": {
+                              "config": {
+                                "config": {
+                                  "config": {
+                                    "config": {
+                                      "config": {
+                                        "config": {
+                                          "config": {
+                                            "config": {
+                                              "config": {
+                                                "config": {
+                                                  "config": {
+                                                    "config": {
+                                                      "config": {
+                                                        "config": {
+                                                          "caseIdAttribute": "concept:name",
+                                                          "objectType": "case_object",
+                                                          "extractLifecycle": true
+                                                        },
+                                                        "caseIdAttribute": "c"
+                                                      },
+                                                      "caseIdAttribute": "co"
+                                                    },
+                                                    "caseIdAttribute": "con"
+                                                  },
+                                                  "caseIdAttribute": "conc"
+                                                },
+                                                "caseIdAttribute": "conce"
+                                              },
+                                              "caseIdAttribute": "concep"
+                                            },
+                                            "caseIdAttribute": "concept"
+                                          },
+                                          "caseIdAttribute": "concept:"
+                                        },
+                                        "caseIdAttribute": "concept:n"
+                                      },
+                                      "caseIdAttribute": "concept:na"
+                                    },
+                                    "caseIdAttribute": "concept:nam"
+                                  },
+                                  "caseIdAttribute": "concept:name"
+                                },
+                                "objectType": "c"
+                              },
+                              "objectType": "ca"
+                            },
+                            "objectType": "cas"
+                          },
+                          "objectType": "case"
+                        },
+                        "objectType": "case_"
+                      },
+                      "objectType": "case_o"
+                    },
+                    "objectType": "case_ob"
+                  },
+                  "objectType": "case_obj"
+                },
+                "objectType": "case_obje"
+              },
+              "objectType": "case_objec"
+            },
+            "objectType": "case_object"
+          },
+          "extractLifecycle": true
+        }
+      },
+      "inputs": [
+        {
+          "id": "node-3-input-0",
+          "name": "Traces",
+          "dataType": "Series"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-3-output-0",
+          "name": "Case Objects",
+          "dataType": "Object"
+        }
+      ]
+    },
+    {
+      "id": "node-4",
+      "type": "stream-point-extractor",
+      "position": {
+        "x": 700,
+        "y": 100
+      },
+      "config": {
+        "config": {
+          "config": {
+            "config": {
+              "config": {
+                "config": {
+                  "config": {
+                    "config": {
+                      "config": {
+                        "config": {
+                          "config": {
+                            "config": {
+                              "config": {
+                                "config": {
+                                  "config": {
+                                    "config": {
+                                      "config": {
+                                        "config": {
+                                          "config": {
+                                            "config": {
+                                              "config": {
+                                                "config": {
+                                                  "config": {
+                                                    "config": {
+                                                      "config": {
+                                                        "config": {
+                                                          "config": {
+                                                            "config": {
+                                                              "config": {
+                                                                "config": {
+                                                                  "config": {
+                                                                    "config": {
+                                                                      "config": {
+                                                                        "config": {
+                                                                          "config": {
+                                                                            "config": {
+                                                                              "config": {
+                                                                                "config": {
+                                                                                  "config": {
+                                                                                    "config": {
+                                                                                      "streamPointsPath": "list/list/list",
+                                                                                      "timestampField": "date",
+                                                                                      "eventDataPath": "string"
+                                                                                    },
+                                                                                    "streamPointsPath": "l"
+                                                                                  },
+                                                                                  "streamPointsPath": "li"
+                                                                                },
+                                                                                "streamPointsPath": "lis"
+                                                                              },
+                                                                              "streamPointsPath": "list"
+                                                                            },
+                                                                            "streamPointsPath": "list-"
+                                                                          },
+                                                                          "streamPointsPath": "list-k"
+                                                                        },
+                                                                        "streamPointsPath": "list-"
+                                                                      },
+                                                                      "streamPointsPath": "list"
+                                                                    },
+                                                                    "streamPointsPath": "lis"
+                                                                  },
+                                                                  "streamPointsPath": "list"
+                                                                },
+                                                                "streamPointsPath": "list_"
+                                                              },
+                                                              "streamPointsPath": "list_l"
+                                                            },
+                                                            "streamPointsPath": "list_li"
+                                                          },
+                                                          "streamPointsPath": "list_lis"
+                                                        },
+                                                        "streamPointsPath": "list_list"
+                                                      },
+                                                      "streamPointsPath": "list_list_"
+                                                    },
+                                                    "streamPointsPath": "list_list_k"
+                                                  },
+                                                  "streamPointsPath": "list_list_ku"
+                                                },
+                                                "streamPointsPath": "list_list_k"
+                                              },
+                                              "streamPointsPath": "list_list_"
+                                            },
+                                            "streamPointsPath": "list_list_l"
+                                          },
+                                          "streamPointsPath": "list_list_li"
+                                        },
+                                        "streamPointsPath": "list_list_lis"
+                                      },
+                                      "streamPointsPath": "list_list_list"
+                                    },
+                                    "timestampField": "d"
+                                  },
+                                  "timestampField": "da"
+                                },
+                                "timestampField": "daa"
+                              },
+                              "timestampField": "daa+"
+                            },
+                            "timestampField": "daa"
+                          },
+                          "timestampField": "da"
+                        },
+                        "timestampField": "dat"
+                      },
+                      "timestampField": "date"
+                    },
+                    "eventDataPath": "s"
+                  },
+                  "eventDataPath": "st"
+                },
+                "eventDataPath": "str"
+              },
+              "eventDataPath": "stri"
+            },
+            "eventDataPath": "strin"
+          },
+          "eventDataPath": "string"
+        }
+      },
+      "inputs": [
+        {
+          "id": "node-4-input-0",
+          "name": "Traces",
+          "dataType": "Series"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-4-output-0",
+          "name": "Stream Points",
+          "dataType": "Series"
+        }
+      ]
+    },
+    {
+      "id": "node-5",
+      "type": "iot-event-from-stream",
+      "position": {
+        "x": 700,
+        "y": 300
+      },
+      "config": {
+        "config": {
+          "config": {
+            "config": {
+              "config": {
+                "config": {
+                  "config": {
+                    "config": {
+                      "config": {
+                        "config": {
+                          "config": {
+                            "config": {
+                              "config": {
+                                "config": {
+                                  "config": {
+                                    "config": {
+                                      "config": {
+                                        "config": {
+                                          "config": {
+                                            "config": {
+                                              "config": {
+                                                "config": {
+                                                  "config": {
+                                                    "config": {
+                                                      "config": {
+                                                        "config": {
+                                                          "config": {
+                                                            "config": {
+                                                              "config": {
+                                                                "config": {
+                                                                  "config": {
+                                                                    "config": {
+                                                                      "config": {
+                                                                        "config": {
+                                                                          "config": {
+                                                                            "config": {
+                                                                              "config": {
+                                                                                "config": {
+                                                                                  "config": {
+                                                                                    "config": {
+                                                                                      "config": {
+                                                                                        "config": {
+                                                                                          "config": {
+                                                                                            "config": {
+                                                                                              "config": {
+                                                                                                "config": {
+                                                                                                  "config": {
+                                                                                                    "config": {
+                                                                                                      "config": {
+                                                                                                        "config": {
+                                                                                                          "config": {
+                                                                                                            "config": {
+                                                                                                              "config": {
+                                                                                                                "config": {
+                                                                                                                  "config": {
+                                                                                                                    "config": {
+                                                                                                                      "config": {
+                                                                                                                        "config": {
+                                                                                                                          "streamIdField": "stream:id",
+                                                                                                                          "eventClass": "iot_event"
+                                                                                                                        },
+                                                                                                                        "streamIdField": "s"
+                                                                                                                      },
+                                                                                                                      "streamIdField": "sr"
+                                                                                                                    },
+                                                                                                                    "streamIdField": "s"
+                                                                                                                  },
+                                                                                                                  "streamIdField": ""
+                                                                                                                },
+                                                                                                                "streamIdField": "s"
+                                                                                                              },
+                                                                                                              "streamIdField": "st"
+                                                                                                            },
+                                                                                                            "streamIdField": "str"
+                                                                                                          },
+                                                                                                          "streamIdField": "stre"
+                                                                                                        },
+                                                                                                        "streamIdField": "strea"
+                                                                                                      },
+                                                                                                      "streamIdField": "stream"
+                                                                                                    },
+                                                                                                    "streamIdField": "stream:"
+                                                                                                  },
+                                                                                                  "streamIdField": "stream:i"
+                                                                                                },
+                                                                                                "streamIdField": "stream:id"
+                                                                                              },
+                                                                                              "streamSourceField": "s"
+                                                                                            },
+                                                                                            "streamSourceField": "st"
+                                                                                          },
+                                                                                          "streamSourceField": "str"
+                                                                                        },
+                                                                                        "streamSourceField": "stre"
+                                                                                      },
+                                                                                      "streamSourceField": "strea"
+                                                                                    },
+                                                                                    "streamSourceField": "strea,"
+                                                                                  },
+                                                                                  "streamSourceField": "strea,_"
+                                                                                },
+                                                                                "streamSourceField": "strea,"
+                                                                              },
+                                                                              "streamSourceField": "strea"
+                                                                            },
+                                                                            "streamSourceField": "stream"
+                                                                          },
+                                                                          "streamSourceField": "stream_"
+                                                                        },
+                                                                        "streamSourceField": "stream"
+                                                                      },
+                                                                      "streamSourceField": "stream:"
+                                                                    },
+                                                                    "streamSourceField": "stream:s"
+                                                                  },
+                                                                  "streamSourceField": "stream:so"
+                                                                },
+                                                                "streamSourceField": "stream:sou"
+                                                              },
+                                                              "streamSourceField": "stream:sour"
+                                                            },
+                                                            "streamSourceField": "stream:sourc"
+                                                          },
+                                                          "streamSourceField": "stream:source"
+                                                        },
+                                                        "streamValueField": "s"
+                                                      },
+                                                      "streamValueField": "sr"
+                                                    },
+                                                    "streamValueField": "s"
+                                                  },
+                                                  "streamValueField": "st"
+                                                },
+                                                "streamValueField": "str"
+                                              },
+                                              "streamValueField": "stre"
+                                            },
+                                            "streamValueField": "strea"
+                                          },
+                                          "streamValueField": "strea,"
+                                        },
+                                        "streamValueField": "strea"
+                                      },
+                                      "streamValueField": "stre"
+                                    },
+                                    "streamValueField": ""
+                                  },
+                                  "streamValueField": "s"
+                                },
+                                "streamValueField": "st"
+                              },
+                              "streamValueField": "str"
+                            },
+                            "streamValueField": "stre"
+                          },
+                          "streamValueField": "strea"
+                        },
+                        "streamValueField": "stream"
+                      },
+                      "streamValueField": "stream:"
+                    },
+                    "streamValueField": "stream:v"
+                  },
+                  "streamValueField": "stream:va"
+                },
+                "streamValueField": "stream:val"
+              },
+              "streamValueField": "stream:valu"
+            },
+            "streamValueField": "stream:value"
+          },
+          "eventClass": "iot_event"
+        }
+      },
+      "inputs": [
+        {
+          "id": "node-5-input-0",
+          "name": "Stream Points",
+          "dataType": "Series"
+        },
+        {
+          "id": "node-5-input-1",
+          "name": "Case ID",
+          "dataType": "Attribute"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-5-output-0",
+          "name": "IoT Events",
+          "dataType": "Event"
+        }
+      ]
+    },
+    {
+      "id": "node-6",
+      "type": "trace-event-linker",
+      "position": {
+        "x": 1000,
+        "y": 200
+      },
+      "config": {
+        "config": {
+          "config": {
+            "config": {
+              "config": {
+                "config": {
+                  "config": {
+                    "config": {
+                      "config": {
+                        "config": {
+                          "config": {
+                            "config": {
+                              "config": {
+                                "config": {
+                                  "config": {
+                                    "config": {
+                                      "config": {
+                                        "config": {
+                                          "config": {
+                                            "config": {
+                                              "config": {
+                                                "config": {
+                                                  "linkingAttribute": "concept:name",
+                                                  "relationshipType": "belongs_to"
+                                                },
+                                                "linkingAttribute": "c"
+                                              },
+                                              "linkingAttribute": "co"
+                                            },
+                                            "linkingAttribute": "con"
+                                          },
+                                          "linkingAttribute": "conc"
+                                        },
+                                        "linkingAttribute": "conce"
+                                      },
+                                      "linkingAttribute": "concep"
+                                    },
+                                    "linkingAttribute": "concept"
+                                  },
+                                  "linkingAttribute": "concept;"
+                                },
+                                "linkingAttribute": "concept;n"
+                              },
+                              "linkingAttribute": "concept;na"
+                            },
+                            "linkingAttribute": "concept;n"
+                          },
+                          "linkingAttribute": "concept;"
+                        },
+                        "linkingAttribute": "concept"
+                      },
+                      "linkingAttribute": "concep"
+                    },
+                    "linkingAttribute": "concept"
+                  },
+                  "linkingAttribute": "conceptn"
+                },
+                "linkingAttribute": "conceptna"
+              },
+              "linkingAttribute": "conceptnam"
+            },
+            "linkingAttribute": "conceptname"
+          },
+          "relationshipType": "belongs_to"
+        }
+      },
+      "inputs": [
+        {
+          "id": "node-6-input-0",
+          "name": "IoT Events",
+          "dataType": "Event"
+        },
+        {
+          "id": "node-6-input-1",
+          "name": "Case Objects",
+          "dataType": "Object"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-6-output-0",
+          "name": "E-O Relationships",
+          "dataType": "Relationship"
+        }
+      ]
+    },
+    {
+      "id": "node-7",
+      "type": "core-metamodel",
+      "position": {
+        "x": 1300,
+        "y": 200
+      },
+      "config": {
+        "config": {}
+      },
+      "inputs": [
+        {
+          "id": "node-7-input-0",
+          "name": "Process Events",
+          "dataType": "Event"
+        },
+        {
+          "id": "node-7-input-1",
+          "name": "IoT Events",
+          "dataType": "Event"
+        },
+        {
+          "id": "node-7-input-2",
+          "name": "Relationships",
+          "dataType": "Relationship"
+        },
+        {
+          "id": "node-7-input-3",
+          "name": "Objects",
+          "dataType": "Object"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "node-7-output-0",
+          "name": "CORE Metamodel",
+          "dataType": "COREModel"
+        }
+      ]
+    },
+    {
+      "id": "node-8",
+      "type": "export-ocel",
+      "position": {
+        "x": 1600,
+        "y": 200
+      },
+      "config": {
+        "config": {
+          "config": {
+            "format": "OCEL 2.0 JSON"
+          },
+          "format": "OCEL 2.0 JSON"
+        }
+      },
+      "inputs": [
+        {
+          "id": "node-8-input-0",
+          "name": "CORE Metamodel",
+          "dataType": "COREModel"
+        }
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "connection-0",
+      "fromNodeId": "node-1",
+      "fromPortId": "node-1-output-0",
+      "toNodeId": "node-2",
+      "toPortId": "node-2-input-0",
+      "dataType": "DataFrame"
+    },
+    {
+      "id": "connection-1",
+      "fromNodeId": "node-2",
+      "fromPortId": "node-2-output-0",
+      "toNodeId": "node-3",
+      "toPortId": "node-3-input-0",
+      "dataType": "Series"
+    },
+    {
+      "id": "connection-2",
+      "fromNodeId": "node-2",
+      "fromPortId": "node-2-output-0",
+      "toNodeId": "node-4",
+      "toPortId": "node-4-input-0",
+      "dataType": "Series"
+    },
+    {
+      "id": "connection-3",
+      "fromNodeId": "node-4",
+      "fromPortId": "node-4-output-0",
+      "toNodeId": "node-5",
+      "toPortId": "node-5-input-0",
+      "dataType": "Series"
+    },
+    {
+      "id": "connection-4",
+      "fromNodeId": "node-5",
+      "fromPortId": "node-5-output-0",
+      "toNodeId": "node-6",
+      "toPortId": "node-6-input-0",
+      "dataType": "Event"
+    },
+    {
+      "id": "connection-5",
+      "fromNodeId": "node-3",
+      "fromPortId": "node-3-output-0",
+      "toNodeId": "node-6",
+      "toPortId": "node-6-input-1",
+      "dataType": "Object"
+    },
+    {
+      "id": "connection-6",
+      "fromNodeId": "node-5",
+      "fromPortId": "node-5-output-0",
+      "toNodeId": "node-7",
+      "toPortId": "node-7-input-1",
+      "dataType": "Event"
+    },
+    {
+      "id": "connection-7",
+      "fromNodeId": "node-3",
+      "fromPortId": "node-3-output-0",
+      "toNodeId": "node-7",
+      "toPortId": "node-7-input-3",
+      "dataType": "Object"
+    },
+    {
+      "id": "connection-8",
+      "fromNodeId": "node-6",
+      "fromPortId": "node-6-output-0",
+      "toNodeId": "node-7",
+      "toPortId": "node-7-input-2",
+      "dataType": "Relationship"
+    },
+    {
+      "id": "connection-9",
+      "fromNodeId": "node-7",
+      "fromPortId": "node-7-output-0",
+      "toNodeId": "node-8",
+      "toPortId": "node-8-input-0",
+      "dataType": "COREModel"
+    }
+  ],
+  "metadata": {
+    "hasCAIRONodes": true,
+    "formatType": "CAIRO"
+  },
+  "description": ""
+}

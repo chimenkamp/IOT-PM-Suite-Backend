@@ -1,5 +1,3 @@
-# core/event_definition.py - Event Data Models
-
 import datetime
 from typing import Dict, Any, Literal, Optional
 

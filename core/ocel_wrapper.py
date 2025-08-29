@@ -1,8 +1,7 @@
-# core/ocel_wrapper.py - Main CORE Metamodel Implementation
-
 from typing import List, Dict, Any, Optional
 import pandas as pd
 import logging
+import pm4py
 
 from core.event_definition import IotEvent, ProcessEvent, Observation, Event
 from core.object_definition import Object, ObjectClassEnum
@@ -36,108 +35,6 @@ def _get_event_sub_type_label(event: Event, event_class: str) -> str:
     return "NO EVENT TYPE"
 
 
-class SimpleOCEL:
-    """
-    Simple OCEL implementation for CORE metamodel.
-    This replaces the pm4py OCEL dependency with a minimal implementation.
-    """
-
-    def __init__(self):
-        # Column names
-        self.event_id_column = "ocel:eid"
-        self.event_activity = "ocel:activity"
-        self.event_timestamp = "ocel:timestamp"
-        self.object_id_column = "ocel:oid"
-        self.object_type_column = "ocel:type"
-        self.qualifier = "ocel:qualifier"
-
-        # DataFrames
-        self.events = pd.DataFrame()
-        self.objects = pd.DataFrame()
-        self.relations = pd.DataFrame()
-        self.o2o = pd.DataFrame()
-
-        # Initialize with standard columns
-        self._initialize_dataframes()
-
-    def _initialize_dataframes(self):
-        """Initialize DataFrames with standard columns."""
-        # Events DataFrame
-        self.events = pd.DataFrame(columns=[
-            self.event_id_column,
-            self.event_activity,
-            self.event_timestamp,
-            "ocel:event_type",
-            "ocel:event_class"
-        ])
-
-        # Objects DataFrame
-        self.objects = pd.DataFrame(columns=[
-            self.object_id_column,
-            self.object_type_column,
-            "ocel:object_class"
-        ])
-
-        # Relations DataFrame
-        self.relations = pd.DataFrame(columns=[
-            self.event_id_column,
-            self.object_id_column,
-            self.object_type_column,
-            self.event_activity,
-            self.qualifier
-        ])
-
-        # Object-to-Object relations DataFrame
-        self.o2o = pd.DataFrame(columns=[
-            self.object_id_column,
-            self.object_id_column + "_2",
-            self.qualifier
-        ])
-
-    def get_extended_table(self) -> pd.DataFrame:
-        """
-        Transform the current OCEL data structure into a Pandas DataFrame.
-        This creates a flattened view of events with related objects.
-        """
-        try:
-            if self.events.empty:
-                return pd.DataFrame()
-
-            # Start with events
-            extended_table = self.events.copy()
-
-            # Add object information through relations
-            if not self.relations.empty:
-                # Merge with relations to get object information
-                relations_with_objects = self.relations.merge(
-                    self.objects[[self.object_id_column, self.object_type_column, "ocel:object_class"]],
-                    on=self.object_id_column,
-                    how='left',
-                    suffixes=('', '_obj')
-                )
-
-                # Group by event to handle multiple objects per event
-                object_info = relations_with_objects.groupby(self.event_id_column).agg({
-                    self.object_id_column: lambda x: list(x),
-                    self.object_type_column: lambda x: list(x),
-                    "ocel:object_class": lambda x: list(x),
-                    self.qualifier: lambda x: list(x)
-                }).reset_index()
-
-                # Merge with events
-                extended_table = extended_table.merge(
-                    object_info,
-                    on=self.event_id_column,
-                    how='left'
-                )
-
-            return extended_table
-
-        except Exception as e:
-            logger.error(f"Error creating extended table: {str(e)}")
-            return self.events.copy()
-
-
 class COREMetamodel:
     def __init__(
             self,
@@ -150,7 +47,7 @@ class COREMetamodel:
             event_event_relationships: Optional[List[EventEventRelationship]] = None
     ) -> None:
         """Initialize the COREMetamodel with strongly typed data structures."""
-        self.ocel = SimpleOCEL()
+        self.ocel = pm4py.OCEL()
 
         self.objects = objects or []
         self.iot_events = iot_events or []
@@ -361,7 +258,7 @@ class COREMetamodel:
                 )
             )
 
-    def get_ocel(self) -> SimpleOCEL:
+    def get_ocel(self) -> pm4py.OCEL:
         """Return the OCEL object."""
         return self.ocel
 

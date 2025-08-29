@@ -1,0 +1,170 @@
+{
+  "id": "pipeline-parser-replication-v2",
+  "name": "Sensor Stream Parser Pipeline",
+  "description": "A pipeline to replicate the functionality of the provided parser.py script. This version uses correct port IDs matching the node definitions.",
+  "version": "1.0.2",
+  "createdAt": "2025-06-30T12:00:00.000Z",
+  "nodes": [
+    {
+      "id": "node-1",
+      "type": "read-file",
+      "position": { "x": 50, "y": 200 },
+      "config": {
+        "fileName": "full_log.xml",
+        "fileType": "XML"
+      },
+      "inputs": [],
+      "outputs": [
+        { "id": "node-1-output-0", "name": "Raw Data", "dataType": "DataFrame" }
+      ]
+    },
+    {
+      "id": "node-2",
+      "type": "column-selector",
+      "position": { "x": 300, "y": 100 },
+      "config": { "columnName": "string.@value" },
+      "inputs": [
+        { "id": "node-2-input-0", "name": "Raw Data", "dataType": "DataFrame" }
+      ],
+      "outputs": [
+        { "id": "node-2-output-0", "name": "Series", "dataType": "Series" }
+      ]
+    },
+    {
+      "id": "node-3",
+      "type": "column-selector",
+      "position": { "x": 300, "y": 300 },
+      "config": { "columnName": "list.list.list" },
+      "inputs": [
+        { "id": "node-3-input-0", "name": "Raw Data", "dataType": "DataFrame" }
+      ],
+      "outputs": [
+        { "id": "node-3-output-0", "name": "Series", "dataType": "Series" }
+      ]
+    },
+    {
+      "id": "node-4",
+      "type": "attribute-selector",
+      "position": { "x": 550, "y": 250 },
+      "config": { "attributeKey": "string" },
+      "inputs": [
+        { "id": "node-4-input-0", "name": "Series", "dataType": "Series" }
+      ],
+      "outputs": [
+        { "id": "node-4-output-0", "name": "Attribute", "dataType": "Attribute" }
+      ]
+    },
+    {
+      "id": "node-5",
+      "type": "attribute-selector",
+      "position": { "x": 550, "y": 350 },
+      "config": { "attributeKey": "date.@value" },
+      "inputs": [
+        { "id": "node-5-input-0", "name": "Series", "dataType": "Series" }
+      ],
+      "outputs": [
+        { "id": "node-5-output-0", "name": "Attribute", "dataType": "Attribute" }
+      ]
+    },
+    {
+      "id": "node-6",
+      "type": "unique-id-generator",
+      "position": { "x": 550, "y": 450 },
+      "config": { "idType": "UUID4" },
+      "inputs": [],
+      "outputs": [
+        { "id": "node-6-output-0", "name": "ID", "dataType": "Attribute" }
+      ]
+    },
+    {
+      "id": "node-7",
+      "type": "iot-event",
+      "position": { "x": 800, "y": 300 },
+      "config": {},
+      "inputs": [
+        { "id": "node-7-input-0", "name": "ID", "dataType": "Attribute" },
+        { "id": "node-7-input-1", "name": "Type", "dataType": "Attribute" },
+        { "id": "node-7-input-2", "name": "Timestamp", "dataType": "Attribute" },
+        { "id": "node-7-input-3", "name": "Metadata", "dataType": "Attribute" }
+      ],
+      "outputs": [
+        { "id": "node-7-output-0", "name": "IoT Event", "dataType": "Event" }
+      ]
+    },
+    {
+      "id": "node-8",
+      "type": "object-creator",
+      "position": { "x": 550, "y": 100 },
+      "config": { "defaultObjectClass": "CASE_OBJECT" },
+      "inputs": [
+        { "id": "node-8-input-0", "name": "ID", "dataType": "Attribute" },
+        { "id": "node-8-input-1", "name": "Type", "dataType": "Attribute" },
+        { "id": "node-8-input-2", "name": "Class", "dataType": "Attribute" },
+        { "id": "node-8-input-3", "name": "Metadata", "dataType": "Attribute" }
+      ],
+      "outputs": [
+        { "id": "node-8-output-0", "name": "Object", "dataType": "Object" }
+      ]
+    },
+    {
+      "id": "node-9",
+      "type": "event-object-relation",
+      "position": { "x": 1050, "y": 200 },
+      "config": { "relationshipType": "involves" },
+      "inputs": [
+        { "id": "node-9-input-0", "name": "Event", "dataType": "Event" },
+        { "id": "node-9-input-1", "name": "Object", "dataType": "Object" }
+      ],
+      "outputs": [
+        { "id": "node-9-output-0", "name": "E-O Relationship", "dataType": "Relationship" }
+      ]
+    },
+    {
+      "id": "node-10",
+      "type": "core-metamodel",
+      "position": { "x": 1300, "y": 200 },
+      "config": {},
+      "inputs": [
+        { "id": "node-10-input-0", "name": "Process Events", "dataType": "Event" },
+        { "id": "node-10-input-1", "name": "IoT Events", "dataType": "Event" },
+        { "id": "node-10-input-2", "name": "Relationships", "dataType": "Relationship" }
+      ],
+      "outputs": [
+        { "id": "node-10-output-0", "name": "CORE Metamodel", "dataType": "COREModel" }
+      ]
+    },
+    {
+      "id": "node-11",
+      "type": "export-ocel",
+      "position": { "x": 1550, "y": 200 },
+      "config": {
+        "format": "OCEL 2.0 JSON",
+        "filename": "parsed_log.jsonocel"
+      },
+      "inputs": [
+        { "id": "node-11-input-0", "name": "CORE Metamodel", "dataType": "COREModel" }
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    { "id": "connection-0", "fromNodeId": "node-1", "fromPortId": "node-1-output-0", "toNodeId": "node-2", "toPortId": "node-2-input-0", "dataType": "DataFrame" },
+    { "id": "connection-1", "fromNodeId": "node-1", "fromPortId": "node-1-output-0", "toNodeId": "node-3", "toPortId": "node-3-input-0", "dataType": "DataFrame" },
+    { "id": "connection-2", "fromNodeId": "node-3", "fromPortId": "node-3-output-0", "toNodeId": "node-4", "toPortId": "node-4-input-0", "dataType": "Series" },
+    { "id": "connection-3", "fromNodeId": "node-3", "fromPortId": "node-3-output-0", "toNodeId": "node-5", "toPortId": "node-5-input-0", "dataType": "Series" },
+    { "id": "connection-4", "fromNodeId": "node-6", "fromPortId": "node-6-output-0", "toNodeId": "node-7", "toPortId": "node-7-input-0", "dataType": "Attribute" },
+    { "id": "connection-5", "fromNodeId": "node-4", "fromPortId": "node-4-output-0", "toNodeId": "node-7", "toPortId": "node-7-input-1", "dataType": "Attribute" },
+    { "id": "connection-6", "fromNodeId": "node-5", "fromPortId": "node-5-output-0", "toNodeId": "node-7", "toPortId": "node-7-input-2", "dataType": "Attribute" },
+    { "id": "connection-7", "fromNodeId": "node-2", "fromPortId": "node-2-output-0", "toNodeId": "node-7", "toPortId": "node-7-input-3", "dataType": "Attribute" },
+    { "id": "connection-8", "fromNodeId": "node-2", "fromPortId": "node-2-output-0", "toNodeId": "node-8", "toPortId": "node-8-input-0", "dataType": "Attribute" },
+    { "id": "connection-9", "fromNodeId": "node-7", "fromPortId": "node-7-output-0", "toNodeId": "node-9", "toPortId": "node-9-input-0", "dataType": "Event" },
+    { "id": "connection-10", "fromNodeId": "node-8", "fromPortId": "node-8-output-0", "toNodeId": "node-9", "toPortId": "node-9-input-1", "dataType": "Object" },
+    { "id": "connection-11", "fromNodeId": "node-7", "fromPortId": "node-7-output-0", "toNodeId": "node-10", "toPortId": "node-10-input-1", "dataType": "Event" },
+    { "id": "connection-12", "fromNodeId": "node-9", "fromPortId": "node-9-output-0", "toNodeId": "node-10", "toPortId": "node-10-input-2", "dataType": "Relationship" },
+    { "id": "connection-13", "fromNodeId": "node-8", "fromPortId": "node-8-output-0", "toNodeId": "node-10", "toPortId": "node-10-input-0", "dataType": "Object" },
+    { "id": "connection-14", "fromNodeId": "node-10", "fromPortId": "node-10-output-0", "toNodeId": "node-11", "toPortId": "node-11-input-0", "dataType": "COREModel" }
+  ],
+  "executionOrder": [
+    "node-1", "node-6", "node-2", "node-3", "node-8", "node-4", "node-5", "node-7", "node-9", "node-10", "node-11"
+  ]
+}

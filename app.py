@@ -6,7 +6,8 @@ import uuid
 from datetime import datetime
 from typing import Dict, Any
 
-from flask import Flask, request, jsonify, send_file
+import pandas as pd
+from flask import Flask, request, jsonify, send_file, current_app, send_from_directory
 from flask_cors import CORS
 
 from models.execution_models import ExecutionStatus
@@ -46,7 +47,7 @@ def health_check():
     """Health check endpoint."""
     return jsonify({
         'status': 'healthy',
-        'timestamp': datetime.utcnow().isoformat(),
+        'timestamp': datetime.now().isoformat(),
         'version': '1.0.0'
     })
 
@@ -78,7 +79,7 @@ def upload_dataset():
             'originalName': original_filename,
             'fileType': file_type,
             'size': result['size'],
-            'uploadedAt': datetime.utcnow().isoformat()
+            'uploadedAt': datetime.now().isoformat()
         })
 
     except Exception as e:
@@ -119,7 +120,7 @@ def validate_pipeline():
             'isValid': validation_result.is_valid,
             'errors': validation_result.errors,
             'warnings': validation_result.warnings,
-            'validatedAt': datetime.utcnow().isoformat()
+            'validatedAt': datetime.now().isoformat()
         })
 
     except Exception as e:
@@ -156,49 +157,74 @@ def execute_pipeline():
         # Initialize execution tracking
         executions[execution_request.execution_id] = {
             'status': ExecutionStatus.RUNNING,
-            'startedAt': datetime.utcnow().isoformat(),
+            'startedAt': datetime.now().isoformat(),
             'pipeline': pipeline_data,
             'logs': [],
             'results': {}
         }
 
-        # Execute pipeline asynchronously (in production, use Celery or similar)
+        # Execute pipeline
         try:
             execution_result = pipeline_service.execute_pipeline(execution_request)
 
             # Update execution tracking
             executions[execution_request.execution_id].update({
                 'status': ExecutionStatus.COMPLETED if execution_result.success else ExecutionStatus.FAILED,
-                'completedAt': datetime.utcnow().isoformat(),
+                'completedAt': datetime.now().isoformat(),
                 'results': execution_result.results,
                 'logs': execution_result.logs,
                 'errors': execution_result.errors
             })
 
-            return jsonify({
+            response_data = {
                 'success': execution_result.success,
                 'executionId': execution_request.execution_id,
                 'results': execution_result.results,
                 'logs': execution_result.logs,
                 'errors': execution_result.errors,
-                'completedAt': datetime.utcnow().isoformat()
-            })
+                'completedAt': datetime.now().isoformat()
+            }
+
+            for key, value in response_data['results']["node_results"].items():
+                if type(value) is pd.DataFrame:
+                    response_data['results']["node_results"][key] = value.head(100).to_dict(orient='records')
+
+            response_data["results"] = {}
+            exec_test = list(execution_result.results["node_results"].values())
+            pd_res = list(filter(lambda n: type(n) == dict and n["type"] == "process_discovery" , exec_test))
+
+            if pd_res and len(pd_res) > 0:
+                pd_entry = pd_res[0]
+                response_data["results"]["process_discovery"] = pd_entry["config"]["path"]
+
+            return jsonify(response_data)
 
         except Exception as exec_error:
             # Update execution tracking with error
             executions[execution_request.execution_id].update({
                 'status': ExecutionStatus.FAILED,
-                'completedAt': datetime.utcnow().isoformat(),
+                'completedAt': datetime.now().isoformat(),
                 'errors': [str(exec_error)]
             })
-            raise exec_error
+
+            # Return error response
+            return jsonify({
+                'success': False,
+                'executionId': execution_request.execution_id,
+                'results': [],
+                'logs': [f"Pipeline execution failed: {str(exec_error)}"],
+                'errors': [str(exec_error)],
+                'completedAt': datetime.now().isoformat()
+            })
 
     except Exception as e:
         logger.error(f"Pipeline execution error: {str(e)}")
         return jsonify({
             'success': False,
             'error': str(e),
-            'executionId': None
+            'executionId': None,
+            'logs': [f"Pipeline execution error: {str(e)}"],
+            'errors': [str(e)]
         }), 500
 
 
@@ -280,7 +306,7 @@ def test_node():
             'message': test_result['message'],
             'data': test_result.get('data'),
             'errors': test_result.get('errors', []),
-            'testedAt': datetime.utcnow().isoformat()
+            'testedAt': datetime.now().isoformat()
         })
 
     except Exception as e:
@@ -343,6 +369,15 @@ def internal_error(error):
     logger.error(f"Internal server error: {str(error)}")
     return jsonify({'error': 'Internal server error'}), 500
 
+@app.route('/uploads/<path:filename>', methods=['GET', 'POST'])
+def download(filename):
+    uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
+    return send_from_directory(uploads, filename)
+
+@app.route('/exports/<path:filename>', methods=['GET', 'POST'])
+def download_result(filename):
+    uploads = os.path.join(current_app.root_path, app.config['EXPORT_FOLDER'])
+    return send_from_directory(uploads, filename)
 
 if __name__ == '__main__':
     # Development server
