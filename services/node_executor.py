@@ -1290,30 +1290,7 @@ class NodeExecutor:
 
         return relationships
 
-    def _execute_table_output(self, node: PipelineNode, inputs: Dict[str, Any], context: Dict[str, Any]) -> Dict[
-        str, Any]:
-        """Execute Table Output node."""
-        data = inputs.get('data')
-        max_rows = node.config.get('maxRows', 100)
 
-        if data is None:
-            return {'message': 'No data to display'}
-
-        if isinstance(data, pd.DataFrame):
-            result_data = data.head(max_rows).to_dict('records')
-        elif isinstance(data, pd.Series):
-            result_data = data.head(max_rows).tolist()
-        elif isinstance(data, list):
-            result_data = data[:max_rows]
-        else:
-            result_data = str(data)
-
-        return {
-            'type': 'table',
-            'data': result_data,
-            'totalRows': len(data) if hasattr(data, '__len__') else 1,
-            'displayedRows': min(max_rows, len(data) if hasattr(data, '__len__') else 1)
-        }
     def _execute_event_event_relation(self, node: PipelineNode, inputs: Dict[str, Any], context: Dict[str, Any]) -> \
     List[EventEventRelationship]:
         """Execute Event-Event Relationship node."""
@@ -1502,8 +1479,6 @@ class NodeExecutor:
         if not core_metamodel:
             raise ValueError("CORE metamodel is required")
 
-
-
         ocel_pointer: pm4py.OCEL = core_metamodel.get_ocel()
         # core_metamodel.save_ocel("v1_output.jsonocel")
         print(ocel_pointer.get_summary())
@@ -1524,4 +1499,30 @@ class NodeExecutor:
             'type': 'process_discovery',
             'config': discovery_config,
             'status': 'ready_for_discovery'
+        }
+
+    def _execute_table_output(self, node: PipelineNode, inputs: Dict[str, Any], context: Dict[str, Any]) -> Dict[
+        str, Any]:
+        """Execute Table Output node."""
+        data = inputs.get('data')
+        max_rows = node.config.get('maxRows', 100)
+
+        if data is None:
+            return {'message': 'No data to display'}
+
+        base_file_path = os.getcwd() + "/exports/"
+        file_name = context['execution_id'] + "_ocel.jsonocel"
+
+        data.save_ocel(base_file_path + file_name)
+
+        config = {
+            'maxRows': max_rows,
+            'timestamp': datetime.now().isoformat(),
+            'path': "http://127.0.0.1:5100/exports/" + file_name
+        }
+
+        return {
+            'type': 'table',
+            'config': config,
+            'status': "success",
         }

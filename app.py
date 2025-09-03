@@ -193,9 +193,15 @@ def execute_pipeline():
             exec_test = list(execution_result.results["node_results"].values())
             pd_res = list(filter(lambda n: type(n) == dict and n["type"] == "process_discovery" , exec_test))
 
+            ocel_res = list(filter(lambda n: type(n) == dict and n["type"] == "table" , exec_test))
+
             if pd_res and len(pd_res) > 0:
                 pd_entry = pd_res[0]
                 response_data["results"]["process_discovery"] = pd_entry["config"]["path"]
+
+            if ocel_res and len(ocel_res) > 0:
+                ocel_entry = ocel_res[0]
+                response_data["results"]["table"] = ocel_entry["config"]["path"]
 
             return jsonify(response_data)
 
