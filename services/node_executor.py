@@ -1505,20 +1505,24 @@ class NodeExecutor:
         str, Any]:
         """Execute Table Output node."""
         data = inputs.get('data')
-        max_rows = node.config.get('maxRows', 100)
 
         if data is None:
             return {'message': 'No data to display'}
 
         base_file_path = os.getcwd() + "/exports/"
-        file_name = context['execution_id'] + "_ocel.jsonocel"
+        file_name = context['execution_id'] + "_ocel"
 
-        data.save_ocel(base_file_path + file_name)
+        file_type = node.config.get('format', 'jsonocel')
+        max_rows = node.config.get('maxRows', 100)
+
+        full_file_path = f"{base_file_path}{file_name}.{file_type}"
+
+        pm4py.write_ocel(data.get_ocel(), full_file_path)
 
         config = {
             'maxRows': max_rows,
             'timestamp': datetime.now().isoformat(),
-            'path': "http://127.0.0.1:5100/exports/" + file_name
+            'path': f"http://127.0.0.1:5100/exports/{file_name}.{file_type}"
         }
 
         return {
